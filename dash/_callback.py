@@ -104,9 +104,7 @@ def insert_callback(
     return callback_id
 
 
-def register_callback(
-    callback_list, callback_map, config_prevent_initial_callbacks, *_args, **_kwargs
-):
+def register_callback(callback_list, callback_map, config_prevent_initial_callbacks, *_args, **_kwargs):
     (
         output,
         flat_inputs,
@@ -143,9 +141,7 @@ def register_callback(
             output_spec = kwargs.pop("outputs_list")
             _validate.validate_output_spec(insert_output, output_spec, Output)
 
-            func_args, func_kwargs = _validate.validate_and_group_input_args(
-                args, inputs_state_indices
-            )
+            func_args, func_kwargs = _validate.validate_and_group_input_args(args, inputs_state_indices)
 
             # don't touch the comment on the next line - used by debugger
             output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
@@ -165,18 +161,14 @@ def register_callback(
                 # Flatten grouping and validate grouping structure
                 flat_output_values = flatten_grouping(output_value, output)
 
-            _validate.validate_multi_return(
-                output_spec, flat_output_values, callback_id
-            )
+            _validate.validate_multi_return(output_spec, flat_output_values, callback_id)
 
             component_ids = collections.defaultdict(dict)
             has_update = False
             for val, spec in zip(flat_output_values, output_spec):
                 if isinstance(val, NoUpdate):
                     continue
-                for vali, speci in (
-                    zip(val, spec) if isinstance(spec, list) else [[val, spec]]
-                ):
+                for vali, speci in zip(val, spec) if isinstance(spec, list) else [[val, spec]]:
                     if not isinstance(vali, NoUpdate):
                         has_update = True
                         id_str = stringify_id(speci["id"])
@@ -209,13 +201,7 @@ ns["{function_name}"] = {clientside_function};
 
 
 def register_clientside_callback(
-    callback_list,
-    callback_map,
-    config_prevent_initial_callbacks,
-    inline_scripts,
-    clientside_function,
-    *args,
-    **kwargs
+    callback_list, callback_map, config_prevent_initial_callbacks, inline_scripts, clientside_function, *args, **kwargs
 ):
     output, inputs, state, prevent_initial_call = handle_callback_args(args, kwargs)
     insert_callback(
