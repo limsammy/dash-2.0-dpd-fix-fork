@@ -144,7 +144,9 @@ def register_callback(callback_list, callback_map, config_prevent_initial_callba
             func_args, func_kwargs = _validate.validate_and_group_input_args(args, inputs_state_indices)
 
             # don't touch the comment on the next line - used by debugger
-            output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+            # output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+            merge_dict = {**func_kwargs, **kwargs}
+            output_value = func(*func_args, **merge_dict)
 
             if isinstance(output_value, NoUpdate):
                 raise PreventUpdate
